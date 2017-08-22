@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Wangjian\Dingding\DingdingClient;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(DingdingClient::class, function($app) {
+           return new DingdingClient($app['config']['dingding']);
+        });
     }
 }
