@@ -80,7 +80,7 @@ class DingdingUser extends OauthUser {
             }
         }
 
-        $oauthUser = OauthUser::where('user_id', $user->id)->where('type', 'dingding')->first();
+        $oauthUser = OauthUserModel::where('user_id', $user->id)->where('oauth_type', 'dingding')->first();
 
         //如果不存在，那么插入到oauth_users表
         if(empty($oauthUser)) {
