@@ -19,6 +19,11 @@ class AuthController extends Controller
         $this->middleware('sso_auth:1')->only(['getDingdingLogin']);
     }
 
+    public function getLogin(Request $request) {
+        //暂时不支持内置注册登陆，重定向到钉钉登陆
+        return redirect(url('dingding/login?type=4&' . $request->getQueryString()));
+    }
+
     public function getDingdingLogin(Request $request, DingdingClient $client) {
         //登陆模式，1为扫码登陆，2为表单登陆，3为自定义扫码登陆
         $loginMode = $request->input('type', DingdingClient::LOGIN_QRCODE);

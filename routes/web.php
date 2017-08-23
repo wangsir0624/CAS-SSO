@@ -13,6 +13,7 @@
 
 Route::group(['middleware' => 'tgc_keepalive'], function() {
     Route::get('/', 'IndexController@getIndex');
+    Route::get('login', 'AuthController@getLogin');
     Route::get('dingding/login', 'AuthController@getDingdingLogin');
     Route::get('logout', 'AuthController@getLogout');
 });
