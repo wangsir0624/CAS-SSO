@@ -50,6 +50,6 @@ class ApiController extends Controller
             return response()->json(['errcode' => 4, 'errmsg' => '用户不存在']);
         }
 
-        return response()->json($userEntity->toJson());
+        return response()->json(array_merge($userEntity->toArray(), ['errcode' => 0, 'errmsg' => '']));
     }
 }

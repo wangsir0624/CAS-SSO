@@ -1,11 +1,11 @@
 <?php
 namespace App\Entity\User;
 
-use Illuminate\Contracts\Support\Jsonable;
+use Illuminate\Contracts\Support\Arrayable;
 use App\Model\User as UserModel;
 use App\Model\OauthUser;
 
-class User implements Jsonable {
+class User implements Arrayable {
     /**
      * 可以被转换成json的属性
      * @var array
@@ -77,7 +77,7 @@ class User implements Jsonable {
         return $userEntity;
     }
 
-    public function toJson($options = 0) {
+    public function toArray() {
         $data = [];
 
         foreach($this as $key => $value){
@@ -86,7 +86,7 @@ class User implements Jsonable {
             }
         }
 
-        return json_encode($data);
+        return $data;
     }
 
     public static function createUser($type = 'inner') {
