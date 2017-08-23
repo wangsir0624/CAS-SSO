@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Model\Application;
 use Illuminate\Support\Facades\App;
 use Redis;
+use App\Entity\User\User;
 
 class ApiController extends Controller
 {
@@ -22,7 +23,7 @@ class ApiController extends Controller
         }
 
         //检查app key和app secret是否正确
-        $application = Application::where('app_key', $request->appKey)->where('status', 1)->first();
+        $application = Application::where('app_key', $request->appKey)->available()->first();
         if(empty($application) || $application->app_secret != $request->appSecret) {
             return response()->json(['errcode' => 2, 'errmsg' => 'app_key或app_secret不正确']);
         }
@@ -44,6 +45,11 @@ class ApiController extends Controller
         //销毁code
         Redis::del($st);
 
-        echo $userId . $type;
+        $userEntity = User::find($userId, 'id', $type);
+        if(empty($userEntity)) {
+            return response()->json(['errcode' => 4, 'errmsg' => '用户不存在']);
+        }
+
+        return response()->json($userEntity->toJson());
     }
 }

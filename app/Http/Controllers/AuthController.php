@@ -10,6 +10,7 @@ use App\Services\Util;
 use App\Entity\User\DingdingUser;
 use Illuminate\Support\Str;
 use App\Model\Application;
+use DB;
 
 class AuthController extends Controller
 {
@@ -38,7 +39,17 @@ class AuthController extends Controller
                 throw new \RuntimeException($userInfo['errmsg'], 'errcode');
             }
         } catch(\Exception $e) {
-            exit('登陆失败：' . $e->getMessage());
+            //存储登陆记录日志
+            $this->writeLoginLogs([
+               'user_id' => 0,
+                'login_type' => 'dingding',
+                'login_status' => 0,
+                'login_text' => $e->getMessage(),
+                'login_time' => time(),
+                'login_ip' => $request->getClientIp()
+            ]);
+
+            return redirect(Util::addParametersToUrl($request->fullUrl(), ['style' => 4, 'code' => '']))->with('error', $e->getMessage());
         }
 
         //获取用户详细信息
@@ -54,6 +65,16 @@ class AuthController extends Controller
         //设置TGT
         Redis::set('TGT:' . $tgc, $globalUserId . ':' . 'dingding');
         Redis::expire('TGT:' . $tgc, app('config')['sso.tgc_lifetime'] * 60);
+
+        //存储登陆日志
+        $this->writeLoginLogs([
+            'user_id' => $globalUserId,
+            'login_type' => 'dingding',
+            'login_status' => 1,
+            'login_text' => '登陆成功',
+            'login_time' => time(),
+            'login_ip' => $request->getClientIp()
+        ]);
 
         //跳转
         if($request->has('service') && Str::startsWith($request->service, Application::getAllUrlPrefixs())) {
@@ -75,13 +96,33 @@ class AuthController extends Controller
         //删除TGT
         Redis::del('TGT:' . $request->cookie('TGC-SSO'));
 
-        $response = null;
-        if($request->has('service')) {
-            $response = redirect('dingding/login?type=4&service=' . $request->service);
+        //子应用注销地址
+        $logoutUrls = Application::getAllLogoutUrls();
+
+        //注销后跳转地址
+        $destination = '';
+        if($request->has('service') && Str::startsWith($request->service, Application::getAllUrlPrefixs())) {
+            $destination = $request->service;
         } else {
-            $response = redirect('dingding/login?type=4');
+            $destination = url('dingding/login?type=4');
         }
 
-        return $response->cookie('TGC-SSO', '', -1);
+        //过多少秒跳转
+        $delay = 1;
+
+        return response()->view('auth.logout', compact(['logoutUrls', 'destination', 'delay']))->cookie('TGC-SSO', '', -1);
+    }
+
+    protected function writeLoginLogs($data) {
+        DB::table('login_logs')->insert($data);
+
+        //如果登陆成功，更新用户的最近登陆时间和最近登陆IP
+        if($data['login_status'] > 0) {
+            DB::table('users')->where('id', $data['user_id'])->update([
+                'last_login_time' => time(),
+                'last_login_type' => $data['login_type'],
+                'last_login_ip' => $data['login_ip']
+            ]);
+        }
     }
 }

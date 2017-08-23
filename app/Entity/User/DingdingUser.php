@@ -5,7 +5,7 @@ use App\Model\User as UserModel;
 use App\Model\OauthUser as OauthUserModel;
 
 class DingdingUser extends OauthUser {
-    public $jsonable = ['id', 'mobile', 'email', 'realname', 'gender', 'birthday', 'avatar', 'oauth_type'];
+    public $jsonable = ['id', 'mobile', 'email', 'realname', 'gender', 'birthday', 'avatar', 'oauth_type', 'identifier'];
 
     public $oauth_type = 'dingding';
 
@@ -86,15 +86,19 @@ class DingdingUser extends OauthUser {
         if(empty($oauthUser)) {
             $oauthUser = new OauthUserModel;
             $oauthUser->user_id = $user->id;
-            $oauthUser->type = 'dingding';
+            $oauthUser->oauth_type = 'dingding';
             $oauthUser->identifier = $userInfo['unionid'];
             $oauthUser->data = json_encode($userInfo);
 
             $oauthUser->save();
         } else {
+            $oldOauthUser = clone $oauthUser;
+
             $oauthUser->data = json_encode($userInfo);
 
-            $oauthUser->save();
+            if($oauthUser != $oldOauthUser) {
+                $oauthUser->save();
+            }
         }
 
         //返回用户ID

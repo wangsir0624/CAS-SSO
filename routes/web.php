@@ -18,11 +18,3 @@ Route::group(['middleware' => 'tgc_keepalive'], function() {
 });
 
 Route::get('api/userInfo', 'ApiController@getUserInfo');
-
-Route::get('test', function(\Wangjian\Dingding\DingdingClient $client, \Illuminate\Http\Request $request) {
-   $userId = 1;
-   $type = 'dingding';
-
-   $user = App\Entity\User\User::find('13922462837', 'mobile', 'dingding');
-   var_dump($user->toJson());
-});
