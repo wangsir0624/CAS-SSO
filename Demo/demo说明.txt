@@ -1,0 +1,9 @@
+1、在Demo中，用户中心的域名为datacenter.linghit.com，Demo域名为passport.demo.com，开发中，要将域名改成相应的实际域名
+
+2、Demo共包含三个页面，三个页面的作用如下：
+/index.php  首页，首页必须要登陆才能访问，如果未登陆，那么重定向到登陆页面sso.php
+
+/sso.php  登陆页面，首先检查是否含有service ticket（即code)参数，如果有，那么调用用户中心的api/userInfo接口来获取登陆用户的信息，如果没有，则重定向到用户中心的登陆页面
+
+/logout.php  登出页面，注意，此链接只用来销毁局部会话，在用户中心注销登陆的时候，由用户中心发送此请求
+
