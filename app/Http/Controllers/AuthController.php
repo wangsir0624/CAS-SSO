@@ -43,6 +43,10 @@ class AuthController extends Controller
             if($userInfo['errcode'] != 0) {
                 throw new \RuntimeException($userInfo['errmsg'], 'errcode');
             }
+
+            //获取用户详细信息
+            $unionid = $userInfo['user_info']['unionid'];
+            $userInfo = $client->getUserDetailByUnionid(Util::getDingdingAccessToken(), $unionid);
         } catch(\Exception $e) {
             //存储登陆记录日志
             $this->writeLoginLogs([
@@ -56,10 +60,6 @@ class AuthController extends Controller
 
             return redirect(Util::addParametersToUrl($request->fullUrl(), ['style' => 4, 'code' => '']))->with('error', $e->getMessage());
         }
-
-        //获取用户详细信息
-        $unionid = $userInfo['user_info']['unionid'];
-        $userInfo = $client->getUserDetailByUnionid(Util::getDingdingAccessToken(), $unionid);
 
         //获取全局用户ID
         $globalUserId = DingdingUser::getGlobalUserId($userInfo);
