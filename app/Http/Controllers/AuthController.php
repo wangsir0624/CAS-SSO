@@ -109,7 +109,7 @@ class AuthController extends Controller
         if($request->has('service') && Str::startsWith($request->service, Application::getAllUrlPrefixs())) {
             $destination = $request->service;
         } else {
-            $destination = url('dingding/login?type=4');
+            $destination = url('login');
         }
 
         //过多少秒跳转
