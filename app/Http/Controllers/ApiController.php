@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Application;
 use Illuminate\Support\Facades\App;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 use App\Entity\User\User;
 
 class ApiController extends Controller

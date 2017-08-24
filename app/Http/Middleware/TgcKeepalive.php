@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 
 class TgcKeepalive
 {

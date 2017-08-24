@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 use App\Services\Util;
 use Illuminate\Support\Str;
 use App\Model\Application;

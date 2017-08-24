@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Redis;
+use Illuminate\Support\Facades\Redis;
 use Wangjian\Dingding\DingdingClient;
 use App\Services\Util;
 use App\Entity\User\DingdingUser;

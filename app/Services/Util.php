@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use Redis;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 
 class Util {
