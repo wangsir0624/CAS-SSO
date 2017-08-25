@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ForkUsersFromDingding;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        ForkUsersFromDingding::class
     ];
 
     /**
@@ -26,6 +27,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+
+        //将钉钉人员信息同步到用户表
+        $schedule->command('fork_users:dingding')->dailyAt('06:00');
     }
 
     /**
