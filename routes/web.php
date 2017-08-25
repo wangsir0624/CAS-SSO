@@ -19,3 +19,4 @@ Route::group(['middleware' => 'tgc_keepalive'], function() {
 });
 
 Route::get('api/userInfo', 'ApiController@getUserInfo');
+Route::get('api/users', 'ApiController@getUsers');

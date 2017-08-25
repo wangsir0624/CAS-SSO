@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
 
         //将钉钉人员信息同步到用户表
-        $schedule->command('fork_users:dingding')->dailyAt('06:00');
+        $schedule->command('fork_users:dingding')->dailyAt('00:00');
     }
 
     /**
